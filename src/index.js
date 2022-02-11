@@ -1,6 +1,5 @@
 import './css/styles.css';
 import Notiflix from 'notiflix';
-
 var debounce = require('lodash.debounce');
 const DEBOUNCE_DELAY = 300;
 
@@ -12,8 +11,45 @@ const refs = {
 
 refs.input.addEventListener("input", debounce(fetchCountries, DEBOUNCE_DELAY));
 
-
-
+function fetchCountries() {
+    let searchQuery = refs.input.value.trim();
+    if (searchQuery === "") {
+        refs.ul.innerHTML = " ";
+        return;
+    }
+    fetch(`https://restcountries.com/v3.1/name/${searchQuery}?fields=capital,population,languages,name,flags`)
+        .then(function (response) {
+            if (!response.ok) {
+                throw Error;
+            }
+            return response;
+        })
+        .then(response => response.json())
+        .then(value => {
+            if (value.length > 10) {
+                Notiflix.Notify.info("Too many matches found. Please enter a more specific name.");
+                return;
+            }
+            if (value.length >= 2 && value.length <= 10) {
+           
+                for (let i = 0; i < value.length; i += 1) {
+                    refs.ul.insertAdjacentHTML("beforeend", test(value[i]))
+                }
+            
+            }
+            if (value.length === 1) {
+                console.log(value);
+                refs.ul.insertAdjacentHTML("beforeend", makeSingleCounty(value));
+            }
+          
+     
+        })
+        .catch(error => {
+             Notiflix.Notify.failure("Oops, there is no country with that name")
+        })
+        
+   
+}
 function makeSingleCounty(value) {
     return value.map(({ capital, population, languages, flags, name }) => {
         return `
@@ -48,41 +84,3 @@ function test(value) {
    
 }
 
-function fetchCountries() {
-    let searchQuery = refs.input.value.trim();
-    if (searchQuery === "") {
-        refs.ul.innerHTML = " ";
-        return;
-    }
-    fetch(`https://restcountries.com/v3.1/name/${searchQuery}?fields=capital,population,languages,name,flags`)
-        .then(response => {
-            if (response.status === 404) {
-                Notiflix.Notify.failure("Oops, there is no country with that name")
-                  return
-            }
-            else {
-                return response
-            }
-        })
-        .then(response => response.json())
-        .then(value => {
-            if (value.length > 10) {
-                Notiflix.Notify.info("Too many matches found. Please enter a more specific name.");
-                return;
-            }
-            if (value.length >= 2 && value.length <= 10) {
-           
-                for (let i = 0; i < value.length; i += 1) {
-                    refs.ul.insertAdjacentHTML("beforeend", test(value[i]))
-                }
-            
-            }
-            if (value.length === 1) {
-                console.log(value);
-                refs.ul.insertAdjacentHTML("beforeend", makeSingleCounty(value));
-            }
-     
-        })
-        
-   
-}
