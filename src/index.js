@@ -38,7 +38,6 @@ function fetchCountries() {
             
             }
             if (value.length === 1) {
-                console.log(value);
                 refs.ul.insertAdjacentHTML("beforeend", makeSingleCounty(value));
             }
           
