@@ -1,5 +1,6 @@
 import './css/styles.css';
 import Notiflix from 'notiflix';
+import search from './fetchCountries';
 var debounce = require('lodash.debounce');
 const DEBOUNCE_DELAY = 300;
 
@@ -17,8 +18,10 @@ function fetchCountries() {
         refs.ul.innerHTML = " ";
         return;
     }
+   
     fetch(`https://restcountries.com/v3.1/name/${searchQuery}?fields=capital,population,languages,name,flags`)
-        .then(function (response) {
+    //  search(searchQuery)
+    .then(function (response) {
             if (!response.ok) {
                 throw Error;
             }
@@ -31,14 +34,13 @@ function fetchCountries() {
                 return;
             }
             if (value.length >= 2 && value.length <= 10) {
-           
-                for (let i = 0; i < value.length; i += 1) {
-                    refs.ul.insertAdjacentHTML("beforeend", test(value[i]))
-                }
-            
+                refs.ul.innerHTML = "";
+                value.forEach(value => {     
+               refs.ul.insertAdjacentHTML("beforeend", test (value))
+           }) 
             }
             if (value.length === 1) {
-                refs.ul.insertAdjacentHTML("beforeend", makeSingleCounty(value));
+                refs.ul.innerHTML = makeSingleCounty(value)
             }
           
      
