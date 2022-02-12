@@ -19,8 +19,8 @@ function fetchCountries() {
         return;
     }
    
-    fetch(`https://restcountries.com/v3.1/name/${searchQuery}?fields=capital,population,languages,name,flags`)
-    //  search(searchQuery)
+    // fetch(`https://restcountries.com/v3.1/name/${searchQuery}?fields=capital,population,languages,name,flags`)
+     search(searchQuery)
     .then(function (response) {
             if (!response.ok) {
                 throw Error;

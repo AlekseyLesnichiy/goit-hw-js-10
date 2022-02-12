@@ -1,5 +1,5 @@
 function search(value) {
-    fetch(`https://restcountries.com/v3.1/name/${value}?fields=capital,population,languages,name,flags`)
+  return  fetch(`https://restcountries.com/v3.1/name/${value}?fields=capital,population,languages,name,flags`)
     .then(response => response)
 }
 export default search;
